@@ -173,6 +173,18 @@ const copy = {
     aiBadge: "AI demo mood",
     footer: "Built to imagine cleaner, simpler public life.",
     demoExperience: "DEMO EXPERIENCE",
+    guideEyebrow: "READ THIS FIRST",
+    guideTitle: "Simple way to understand this page",
+    guideCopy: "This page has two types of information. Mood numbers are AI demo simulation. Crime, assets and education must be checked from MyNeta/affidavit links.",
+    guideMoodTitle: "AI mood number",
+    guideMoodCopy: "Fun demo signal. Not a real survey.",
+    guideVerifyTitle: "Affidavit facts",
+    guideVerifyCopy: "Crime, assets and education: click MyNeta and verify.",
+    guideIssueTitle: "Public issues",
+    guideIssueCopy: "Roads, jobs, education, electricity and healthcare.",
+    verdictMood: "Demo mood",
+    verdictVerify: "Verify facts",
+    verdictIssues: "Public issues",
   },
   hi: {
     live: "लाइव डेमो",
@@ -239,6 +251,18 @@ const copy = {
     aiBadge: "AI demo mood",
     footer: "स्वच्छ और सरल जनजीवन की कल्पना के लिए बनाया गया।",
     demoExperience: "डेमो अनुभव",
+    guideEyebrow: "पहले यह समझें",
+    guideTitle: "इस पेज को समझने का आसान तरीका",
+    guideCopy: "इस पेज में दो तरह की जानकारी है। Mood numbers AI demo simulation हैं। Crime, संपत्ति और शिक्षा MyNeta/affidavit links से खुद verify करें।",
+    guideMoodTitle: "AI mood number",
+    guideMoodCopy: "मजेदार demo signal. असली survey नहीं।",
+    guideVerifyTitle: "Affidavit facts",
+    guideVerifyCopy: "Crime, संपत्ति और शिक्षा: MyNeta खोलकर verify करें।",
+    guideIssueTitle: "Public issues",
+    guideIssueCopy: "सड़क, नौकरी, शिक्षा, बिजली और स्वास्थ्य।",
+    verdictMood: "Demo mood",
+    verdictVerify: "Facts verify करें",
+    verdictIssues: "Public issues",
   },
 };
 
@@ -278,6 +302,11 @@ function CandidateCard({ candidate, rank, lang }: { candidate: Candidate; rank: 
         <span className="score" style={{ color: candidate.color }}>{candidate.popularity}%<small>{t.mood}</small></span>
       </div>
       <Pill tone={candidate.id === "new-face" || candidate.id === "ajay" ? "green" : "purple"}><ShieldCheck size={13} /> {candidate.cleanBadge}</Pill>
+      <div className="verdict-row">
+        <span className="verdict-chip mood-chip">{t.verdictMood}</span>
+        <span className="verdict-chip verify-chip">{t.verdictVerify}</span>
+        <span className="verdict-chip issue-chip">{t.verdictIssues}</span>
+      </div>
       <p className="candidate-note">{candidate.note}</p>
       <p className="verify-hint">{t.verifyHint}</p>
       <div className="facts">
@@ -292,6 +321,39 @@ function CandidateCard({ candidate, rank, lang }: { candidate: Candidate; rank: 
       <div className="mini-meter"><span>{t.youth} <b>{candidate.youth}</b></span><i><em style={{ width: `${candidate.youth}%`, background: candidate.color }} /></i></div>
       <div className="demo-label">{t.demoLabel}</div>
     </motion.article>
+  );
+}
+
+function VoterGuide({ lang }: { lang: Lang }) {
+  const t = copy[lang];
+  const guideItems = [
+    { title: t.guideMoodTitle, copy: t.guideMoodCopy, icon: Sparkles, tone: "purple" },
+    { title: t.guideVerifyTitle, copy: t.guideVerifyCopy, icon: Fingerprint, tone: "amber" },
+    { title: t.guideIssueTitle, copy: t.guideIssueCopy, icon: Route, tone: "green" },
+  ];
+
+  return (
+    <section className="voter-guide" id="guide">
+      <motion.div className="guide-shell glass" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .25 }}>
+        <div className="guide-copy">
+          <span className="eyebrow">{t.guideEyebrow}</span>
+          <h2>{t.guideTitle}</h2>
+          <p>{t.guideCopy}</p>
+        </div>
+        <div className="guide-cards">
+          {guideItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <motion.div className={`guide-card ${item.tone}`} key={item.title} whileHover={{ y: -6, scale: 1.02 }}>
+                <Icon size={22} />
+                <strong>{item.title}</strong>
+                <span>{item.copy}</span>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
+    </section>
   );
 }
 
@@ -435,6 +497,8 @@ export default function Home() {
           <div className="float-stat fs3"><BarChart3 size={16} /><span>{t.changeIndex}<b>82 / 100</b></span></div>
         </div>
       </motion.header>
+
+      <VoterGuide lang={lang} />
 
       <section id="mood">
         <SectionHead eyebrow={t.moodEyebrow} title={t.moodTitle} copy={t.moodCopy} />
